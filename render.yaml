@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: game-5-detik
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /

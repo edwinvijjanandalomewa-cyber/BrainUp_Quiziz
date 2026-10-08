@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BrainUp</title>
+        <meta name="theme-color" content="#f5f4ec">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="brand-mark" aria-hidden="true">5<span>s</span></div>
+            <span class="brand-caption">PERMAINAN CEPAT</span>
+            <span id="socket-status" class="connection-status" role="status" hidden></span>
+        </header>
+
+        <main class="page-shell">
+            <section class="intro" aria-labelledby="page-title">
+                <p class="eyebrow">SIAPKAN PIKIRANMU</p>
+                <h1 id="page-title">Game <span>5 Detik</span></h1>
+                <p class="intro-copy">Pikir cepat, jawab tepat.</p>
+                <p class="topic-badge"><span class="topic-label">TEMA SOAL</span><span id="theme-display" aria-live="polite">Pengetahuan Umum</span></p>
+            </section>
+
+            <section class="rules" aria-labelledby="rules-title">
+                <div class="rules-heading">
+                    <span class="section-index">01</span>
+                    <h2 id="rules-title">Aturan main</h2>
+                </div>
+                <ol class="rules-list">
+                    <li><span class="rule-number">1</span><span>Pembuat kuis membagikan kode 6 digit kepada peserta.</span></li>
+                    <li><span class="rule-number">2</span><span>Setiap soal punya hitung mundur 5 detik sebelum dijawab.</span></li>
+                    <li><span class="rule-number">3</span><span>Skor dan jawaban peserta tampil setelah kuis berlangsung.</span></li>
+                </ol>
+            </section>
+
+            <section id="entry-screen" class="content-panel entry-panel" aria-labelledby="entry-title">
+                <p class="eyebrow">PILIH PERANMU</p>
+                <h2 id="entry-title">Mulai bermain</h2>
+                <div class="entry-actions">
+                    <button id="open-host-setup" class="button button-primary" type="button">Buat kuis sendiri</button>
+                    <button id="open-join-form" class="button button-secondary" type="button">Join kuis</button>
+                </div>
+            </section>
+
+            <section id="join-screen" class="content-panel" aria-labelledby="join-title" hidden>
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">IKUT BERMAIN</p>
+                        <h2 id="join-title">Join kuis</h2>
+                    </div>
+                    <button id="join-back" class="button button-secondary" type="button">Kembali</button>
+                </div>
+                <form id="join-form">
+                    <label class="field-label" for="join-name">Nama peserta</label>
+                    <input id="join-name" class="text-input" name="name" type="text" maxlength="40" placeholder="Masukkan nama" required>
+                    <label class="field-label setup-field-label" for="join-code">Kode kuis</label>
+                    <input id="join-code" class="text-input room-code-input" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="6 digit" required>
+                    <p id="join-feedback" class="form-feedback" role="alert" hidden></p>
+                    <button class="button button-primary start-button" type="submit">Masuk ke kuis</button>
+                </form>
+            </section>
+
+            <section id="setup-screen" class="content-panel" aria-labelledby="setup-title" hidden>
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">MULAI DARI SINI</p>
+                        <h2 id="setup-title">Buat kuis</h2>
+                    </div>
+                    <button id="setup-back" class="button button-secondary" type="button">Kembali</button>
+                </div>
+
+                <form id="setup-form">
+                    <label class="field-label" for="quiz-theme">Tema soal</label>
+                    <input id="quiz-theme" class="text-input theme-input" name="quizTheme" type="text" maxlength="50" value="Pengetahuan Umum" placeholder="Contoh: Sains" required>
+
+                    <label class="field-label setup-field-label" for="question-type">Jenis soal</label>
+                    <select id="question-type" class="text-input" name="questionType">
+                        <option value="short">Isian</option>
+                        <option value="multiple">Pilihan ganda (A-D)</option>
+                    </select>
+
+                    <label class="field-label" for="host-name">Nama pembuat</label>
+                    <input id="host-name" class="text-input name-input" name="hostName" type="text" maxlength="40" placeholder="Masukkan nama" required>
+
+                    <div class="questions-heading">
+                        <div>
+                            <span class="field-label">Pertanyaan</span>
+                            <p id="question-hint" class="field-hint">Tulis jawaban alternatif dengan pemisah koma.</p>
+                        </div>
+                        <button id="add-question" class="button button-secondary add-button" type="button"><span aria-hidden="true">+</span> Tambah soal</button>
+                    </div>
+                    <div id="question-list" class="question-list"></div>
+                    <p id="setup-feedback" class="form-feedback" role="alert" hidden></p>
+                    <button class="button button-primary start-button" type="submit">Buat kuis dan dapatkan kode <span aria-hidden="true">-&gt;</span></button>
+                </form>
+            </section>
+
+            <section id="host-lobby-screen" class="content-panel lobby-panel" aria-labelledby="host-lobby-title" hidden>
+                <p class="eyebrow">RUANG KUIS SIAP</p>
+                <h2 id="host-lobby-title">Bagikan kode ini</h2>
+                <div class="room-code-display"><span id="host-room-code">000000</span><button id="copy-room-code" class="button button-secondary" type="button">Salin kode</button></div>
+                <p class="field-hint lobby-hint">Peserta membuka halaman ini dari perangkat mereka, memilih Join kuis, lalu memasukkan kode.</p>
+                <div class="lobby-heading"><h3>Peserta bergabung</h3><span id="host-player-count" class="step-tag">0 PESERTA</span></div>
+                <ul id="host-player-list" class="participant-list"></ul>
+                <p id="lobby-feedback" class="form-feedback" role="alert" hidden></p>
+                <button id="start-hosted-quiz" class="button button-primary start-button" type="button" disabled>Mulai kuis</button>
+            </section>
+
+            <section id="player-waiting-screen" class="content-panel lobby-panel" aria-labelledby="player-waiting-title" hidden>
+                <p class="eyebrow">BERHASIL JOIN</p>
+                <h2 id="player-waiting-title">Tunggu pembuat kuis</h2>
+                <p class="waiting-details">Kode <strong id="player-room-code"></strong><span id="player-waiting-theme"></span></p>
+                <div class="lobby-heading"><h3>Peserta di ruang ini</h3><span id="player-count" class="step-tag">1 PESERTA</span></div>
+                <ul id="waiting-player-list" class="participant-list"></ul>
+            </section>
+
+            <section id="host-live-screen" class="content-panel lobby-panel" aria-labelledby="host-live-title" hidden>
+                <p class="eyebrow">KUIS SEDANG BERLANGSUNG</p>
+                <h2 id="host-live-title">Papan skor</h2>
+                <p class="waiting-details">Kode <strong id="live-room-code"></strong><span id="live-theme"></span></p>
+                <ul id="live-scoreboard" class="participant-list scoreboard-list"></ul>
+            </section>
+
+            <section id="game-screen" class="content-panel game-panel" aria-labelledby="game-question" hidden>
+                <div class="game-topline">
+                    <span id="question-progress" class="step-tag">SOAL 1 DARI 1</span>
+                    <span id="player-label" class="player-label"></span>
+                </div>
+                <div class="progress-track" aria-hidden="true"><span id="progress-fill"></span></div>
+                <p class="eyebrow game-eyebrow">DENGARKAN PERTANYAANNYA</p>
+                <h2 id="game-question" class="game-question"></h2>
+
+                <div id="countdown-block" class="countdown-block" aria-live="polite">
+                    <span class="countdown-label">BERSIAP</span>
+                    <span id="countdown-number" class="countdown-number">5</span>
+                    <span class="countdown-caption">detik</span>
+                </div>
+
+                <form id="answer-form" class="answer-form" hidden>
+                    <label class="field-label" for="player-answer">Sekarang, jawab!</label>
+                    <div class="answer-entry">
+                        <input id="player-answer" class="text-input" name="answer" type="text" autocomplete="off" placeholder="Ketik jawabanmu" required>
+                        <button class="button button-primary" type="submit">Kunci jawaban</button>
+                    </div>
+                </form>
+                <p id="game-feedback" class="form-feedback" role="alert" hidden></p>
+                <div id="choice-list" class="game-choice-list" role="group" aria-label="Pilih jawaban A sampai D" hidden></div>
+
+                <div id="answer-feedback" class="answer-feedback" aria-live="polite" hidden>
+                    <p id="feedback-message" class="feedback-message"></p>
+                    <p id="correct-answer" class="correct-answer"></p>
+                    <button id="continue-button" class="button button-primary" type="button">Soal berikutnya <span aria-hidden="true">-&gt;</span></button>
+                </div>
+            </section>
+
+            <section id="result-screen" class="content-panel result-panel" aria-labelledby="result-title" hidden>
+                <p class="eyebrow">PERMAINAN SELESAI</p>
+                <h2 id="result-title">Hasil <span id="result-player"></span></h2>
+                <div class="score-display">
+                    <strong id="score-fraction" class="score-fraction">0/0</strong>
+                    <span id="score-percent" class="score-percent">0%</span>
+                    <span class="score-caption">jawaban benar</span>
+                </div>
+                <div id="result-review" class="result-review" aria-label="Rincian jawaban"></div>
+                <div class="result-actions">
+                    <button id="result-home" class="button button-secondary" type="button">Kembali ke halaman utama</button>
+                </div>
+            </section>
+
+            <footer class="page-footer"><span>CEPAT BERPIKIR. BERANI MENJAWAB.</span><span>5 DETIK</span></footer>
+        </main>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="sript.js"></script>
+    </body>
+</html>
